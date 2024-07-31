@@ -14,6 +14,7 @@ exports.createUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
+    console.log('getAllUsers---------------------------');
     const users = await userService.getAllUsers();
     res.json(responseFormatter.formatResponse(users, 'Users fetched successfully'));
   } catch (error) {

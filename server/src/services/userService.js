@@ -11,14 +11,14 @@ const refreshJwtSecret = auth.refreshJwtSecret;
 const refreshJwtExpiration = auth.refreshJwtExpiration
 const createUser = async (userData) => {
   try {
-    // const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
     // const newUser = new User({
     //   ...userData,
     //   password: hashedPassword,
     // });
     // await newUser.save();
     // return newUser;
-    return getCreatePgUsers(userData);
+    return getCreatePgUsers({ ...userData, password: hashedPassword });
   } catch (error) {
     throw new Error('Error creating user: ' + error.message);
   }
@@ -62,7 +62,7 @@ const updateUser = async (id, updateData) => {
 const deleteUser = async (id) => {
   try {
     // const user = await User.deleteOne({ _id: id });
-    const user =deleteByIdPgUsers(id);
+    const user = deleteByIdPgUsers(id);
     if (!user) throw new Error('User not found');
     return user;
   } catch (error) {
@@ -120,9 +120,9 @@ const getByIdPgUsers = async (id) => {
 }
 const deleteByIdPgUsers = async (id) => {
   try {
-    const result =await pgClient.query('DELETE FROM "user" WHERE "id" = $1', [id]);
+    const result = await pgClient.query('DELETE FROM "user" WHERE "id" = $1', [id]);
     console.log({ deleteByIdPgUsers: result });
-   return result
+    return result
     return null
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -139,8 +139,9 @@ const getUpdatePgUsers = async (id, updateData) => {
 }
 const getCreatePgUsers = async (userData) => {
   const uuid = uuidv4()
+  console.log({ userData });
   try {
-    const result = await pgClient.query('INSERT INTO "user" ("id", "name") VALUES ($1, $2) RETURNING *', [uuid, userData.name]);
+    const result = await pgClient.query('INSERT INTO "user" ("id", "name", "email", "password") VALUES ($1, $2, $3, $4) RETURNING *', [uuid, userData.name, userData.email, userData.password]);
 
     console.log({ getCreatePgUsers: result.rows[0] });
     return result.rows[0]
