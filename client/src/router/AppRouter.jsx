@@ -4,6 +4,7 @@ import Home from '../pages/home/Home';
 import About from '../pages/about/About';
 import UserList from '../pages/user/UserList'
 import AddUpdate from '../pages/user/AddUpdate'
+import NotFound from '../pages/notfound/NotFound';
 const AppRouter = () => {
   return (
     <Router>
@@ -12,6 +13,9 @@ const AppRouter = () => {
         <Route exact path="/about" element={<About />} />
         <Route exact path="/users" element={<UserList />} />
         <Route exact path="/users/add-update" element={<AddUpdate />} />
+
+        <Route exact path="*" element={<NotFound />} />
+
       </Routes>
     </Router>
   );

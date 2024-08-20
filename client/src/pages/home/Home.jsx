@@ -1,9 +1,15 @@
-import React from 'react'
+import { useEffect } from 'react';
 
 const Home = () => {
-  return (
-    <h1>Home</h1>
-  )
-}
+  useEffect(() => {
+    alert('Mounting Component');
 
-export default Home
+    return () => {
+      alert('Un-Mounting Component');
+    };
+  }, []);
+
+  return <h1>Home</h1>;
+};
+
+export default Home;
